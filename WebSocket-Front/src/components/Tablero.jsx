@@ -13,6 +13,7 @@ const Tablero = ({ socket }) => {
     // Escuchar los eventos del servidor para actualizar el dibujo
     socket.on("actualizarTablero", (nuevoTablero) => {
       setDibujo(nuevoTablero);
+      console.log("actualizacion");
     });
 
     // Limpieza del efecto al desmontar el componente
@@ -27,6 +28,7 @@ const Tablero = ({ socket }) => {
       x: event.nativeEvent.offsetX,
       y: event.nativeEvent.offsetY,
     };
+    console.log(punto);
     socket.emit("clickTablero", punto);
   };
 
@@ -48,7 +50,7 @@ const Tablero = ({ socket }) => {
       <svg width="900" height="600" style={{ border: "4px solid white" }}>
         {/* Lógica para renderizar el dibujo */}
         {dibujo.map((punto, index) => (
-          <circle key={index} cx={punto.x} cy={punto.y} r="3" fill={color} />
+          <circle key={index} cx={punto.x} cy={punto.y} r="8" fill={color} />
         ))}
       </svg>
       <canvas
@@ -59,7 +61,9 @@ const Tablero = ({ socket }) => {
       />
       <BotonDescarga canvasRef={canvasRef} onClick={manejarDescarga} />
       <BotonLimpiar onCleanBoard={manejarLimpiarTablero} />
-      <div className="paleta-color-container"> {/* Corregido aquí */}
+      <div className="paleta-color-container">
+        {" "}
+        {/* Corregido aquí */}
         <PaletaColor onSelectColor={manejarSeleccionColor} />
       </div>
     </div>
