@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import BotonDescarga from "./BotonDescarga";
+import BotonLimpiar from "./BotonLimpiar";
 
 const Tablero = ({ socket }) => {
   const [dibujo, setDibujo] = useState([]);
@@ -32,6 +33,10 @@ const Tablero = ({ socket }) => {
     socket.emit('descargarImagen');
   };
 
+  const manejarLimpiarTablero = () => {
+    setDibujo([]); 
+  };
+
   return (
     <div onClick={manejarClicks}>
       <svg width="800" height="600" style={{ border: "4px solid white" }}>
@@ -47,6 +52,7 @@ const Tablero = ({ socket }) => {
         style={{ display: "none" }}
       />
       <BotonDescarga canvasRef={canvasRef} onClick={manejarDescarga} />
+      <BotonLimpiar onClick={manejarLimpiarTablero} />
     </div>
   );
 };
