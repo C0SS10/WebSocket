@@ -1,6 +1,31 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0.8rem;
   text-align: center;
+}
+
+.paleta-color-container {
+  display: block;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 4rem;
+  max-width: 1280px;
+  padding: 0.2rem;
+  text-align: center;
+}
+
+.color{
+  width: 2.3rem;
+  height: 2.3rem;
+  margin: 0.5rem;
+  border-radius: 50%;
+  border: 2px solid black;
+  cursor: pointer;
+}
+
+.tablero-contenedor{
+  display: flex;
+  position: relative;
 }
