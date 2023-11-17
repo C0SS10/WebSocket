@@ -2,9 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import BotonDescarga from "./BotonDescarga";
 import BotonLimpiar from "./BotonLimpiar";
+import PaletaColor from "./PaletaColor";
 
 const Tablero = ({ socket }) => {
   const [dibujo, setDibujo] = useState([]);
+  const [color, setColor] = useState("#FFFFFF"); // Corregido aquí
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -30,19 +32,23 @@ const Tablero = ({ socket }) => {
 
   const manejarDescarga = () => {
     // Lógica para solicitar la descarga al servidor
-    socket.emit('descargarImagen');
+    socket.emit("descargarImagen");
   };
 
   const manejarLimpiarTablero = () => {
-    setDibujo([]); 
+    setDibujo([]);
+  };
+
+  const manejarSeleccionColor = (nuevoColor) => {
+    setColor(nuevoColor);
   };
 
   return (
-    <div onClick={manejarClicks}>
-      <svg width="800" height="600" style={{ border: "4px solid white" }}>
+    <div onClick={manejarClicks} className="tablero-contenedor">
+      <svg width="900" height="600" style={{ border: "4px solid white" }}>
         {/* Lógica para renderizar el dibujo */}
         {dibujo.map((punto, index) => (
-          <circle key={index} cx={punto.x} cy={punto.y} r="3" fill="green" />
+          <circle key={index} cx={punto.x} cy={punto.y} r="3" fill={color} />
         ))}
       </svg>
       <canvas
@@ -52,7 +58,10 @@ const Tablero = ({ socket }) => {
         style={{ display: "none" }}
       />
       <BotonDescarga canvasRef={canvasRef} onClick={manejarDescarga} />
-      <BotonLimpiar onClick={manejarLimpiarTablero} />
+      <BotonLimpiar onCleanBoard={manejarLimpiarTablero} />
+      <div className="paleta-color-container"> {/* Corregido aquí */}
+        <PaletaColor onSelectColor={manejarSeleccionColor} />
+      </div>
     </div>
   );
 };

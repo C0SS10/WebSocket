@@ -1,16 +1,16 @@
 // BotonLimpia.jsx
 import PropTypes from 'prop-types';
 
-const BotonLimpia = ({ onLimpiarTablero }) => {
+const BotonLimpia = ({ onCleanBoard }) => {
   return (
     <div>
-      <button onClick={onLimpiarTablero}>Limpiar Tablero</button>
+      <button onClick={onCleanBoard}>Limpiar Tablero</button>
     </div>
   );
 };
 
 BotonLimpia.propTypes = {
-  onLimpiarTablero: PropTypes.func.isRequired,
+  onCleanBoard: PropTypes.func.isRequired,
 };
 
 export default BotonLimpia;

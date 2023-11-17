@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 
-const BotonDescarga = ({ canvasRef }) => {
+const BotonDescarga = ({ canvasRef, onClick }) => {
   const [imageURL, setImageURL] = useState('');
 
   const generateImage = () => {
@@ -18,6 +18,11 @@ const BotonDescarga = ({ canvasRef }) => {
 
       // Simular un clic en el enlace para iniciar la descarga
       link.click();
+
+      // Llamar a la función proporcionada en la prop onClick, si existe
+      if (onClick) {
+        onClick();
+      }
     }
   };
 
@@ -36,6 +41,7 @@ const BotonDescarga = ({ canvasRef }) => {
 
 BotonDescarga.propTypes = {
   canvasRef: PropTypes.object.isRequired,
+  onClick: PropTypes.func, // Puedes especificar que onClick es opcional
 };
 
 export default BotonDescarga;
