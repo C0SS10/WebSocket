@@ -1,19 +1,12 @@
-import { useEffect } from 'react'
-import io from 'socket.io-client'
 import Tablero from './components/Tablero'
-import './App.css'
-
-const socket = io('http://localhost:8080');
+import './styles/App.css'
 
 function App() {
-  useEffect(() => {
-    
-  },[]);
 
   return (
-    <>
-      <Tablero socket={socket}/>
-    </>
+    <div className="App">
+      <Tablero />
+    </div>
   )
 }
 

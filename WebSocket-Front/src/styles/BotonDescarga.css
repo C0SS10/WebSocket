@@ -1,0 +1,25 @@
+/* BotonDescarga.css */
+
+.boton-descarga-container {
+  text-align: center;
+  margin: 10px;
+}
+
+.vista-previa-container {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.vista-previa-titulo {
+  margin-bottom: 5px;
+}
+
+.vista-previa-imagen {
+  max-width: 100%;
+  max-height: 200px;
+  margin-bottom: 5px;
+}
+
+.cerrar-vista-previa {
+  margin-top: 5px;
+}

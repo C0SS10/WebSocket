@@ -1,77 +1,81 @@
-import { useState, useEffect, useRef } from "react";
-import PropTypes from "prop-types";
-import BotonDescarga from "./BotonDescarga";
-import BotonLimpiar from "./BotonLimpiar";
+import { useState, useRef } from "react";
+import { useOnDraw } from "./Logica";
 import PaletaColor from "./PaletaColor";
+import BotonLimpiar from "./BotonLimpiar";
+import BotonDescarga from "./BotonDescarga";
 
-const Tablero = ({ socket }) => {
-  const [dibujo, setDibujo] = useState([]);
-  const [color, setColor] = useState("#FFFFFF"); // Corregido aquí
+const Tablero = () => {
+  // Estado para almacenar el color seleccionado
+  const [color, setColor] = useState("#FFFFFF");
+
+  // Obtener referencias y funciones desde el hook useOnDraw
+  const { setCanvasRef, onCanvasMouseDown } = useOnDraw(enDibujo);
+  
+  // Referencia al canvas
   const canvasRef = useRef(null);
 
-  useEffect(() => {
-    // Escuchar los eventos del servidor para actualizar el dibujo
-    socket.on("actualizarTablero", (nuevoTablero) => {
-      setDibujo(nuevoTablero);
-      console.log("actualizacion");
-    });
+  // Función que se ejecuta cuando se dibuja en el canvas
+  function enDibujo(ctx, punto, antPunto) {
+    // Llamar a la función para dibujar una línea
+    dibujarLinea(antPunto, punto, ctx, color, 6);
+  }
 
-    // Limpieza del efecto al desmontar el componente
-    return () => {
-      socket.off("actualizarTablero");
-    };
-  }, [socket]);
+  // Función para dibujar una línea en el canvas
+  function dibujarLinea(inicio, fin, ctx, color, width) {
+    inicio = inicio ?? fin;
+    ctx.beginPath();
+    ctx.lineWidth = width;
+    ctx.strokeStyle = color;
+    ctx.moveTo(inicio.x, inicio.y);
+    ctx.lineTo(fin.x, fin.y);
+    ctx.stroke();
 
-  // Lógica para manejar los clicks en el tablero
-  const manejarClicks = (event) => {
-    const punto = {
-      x: event.nativeEvent.offsetX,
-      y: event.nativeEvent.offsetY,
-    };
-    console.log(punto);
-    socket.emit("clickTablero", punto);
-  };
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(inicio.x, inicio.y, width / 2, 0, 2 * Math.PI);
+    ctx.closePath();
+  }
 
-  const manejarDescarga = () => {
-    // Lógica para solicitar la descarga al servidor
-    socket.emit("descargarImagen");
-  };
-
-  const manejarLimpiarTablero = () => {
-    setDibujo([]);
-  };
-
-  const manejarSeleccionColor = (nuevoColor) => {
+  // Función para manejar la selección de color desde la paleta
+  function manejarSeleccionColor(nuevoColor) {
     setColor(nuevoColor);
+  }
+
+  // Función para limpiar el contenido del tablero (canvas)
+  const limpiarTablero = () => {
+    if (canvasRef.current) {
+      const ctx = canvasRef.current.getContext("2d");
+      ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      console.log("Limpiando el tablero...");
+    }
   };
 
   return (
-    <div onClick={manejarClicks} className="tablero-contenedor">
-      <svg width="900" height="600" style={{ border: "4px solid white" }}>
-        {/* Lógica para renderizar el dibujo */}
-        {dibujo.map((punto, index) => (
-          <circle key={index} cx={punto.x} cy={punto.y} r="8" fill={color} />
-        ))}
-      </svg>
+    <>
+      {/* Canvas donde se dibujará */}
       <canvas
-        ref={canvasRef}
+        className="tablero"
         width={800}
         height={600}
-        style={{ display: "none" }}
+        ref={(ref) => {
+          // Establecer la referencia del canvas
+          setCanvasRef(ref);
+          // Asignar la referencia al canvasRef
+          canvasRef.current = ref;
+        }}
+        onMouseDown={onCanvasMouseDown}
       />
-      <BotonDescarga canvasRef={canvasRef} onClick={manejarDescarga} />
-      <BotonLimpiar onCleanBoard={manejarLimpiarTablero} />
-      <div className="paleta-color-container">
-        {" "}
-        {/* Corregido aquí */}
-        <PaletaColor onSelectColor={manejarSeleccionColor} />
-      </div>
-    </div>
-  );
-};
+      
+      {/* Componente de la paleta de colores */}
+      <PaletaColor onSelectColor={manejarSeleccionColor} />
 
-Tablero.propTypes = {
-  socket: PropTypes.object.isRequired,
+      {/* Botón para limpiar el tablero */}
+      <BotonLimpiar onCleanBoard={limpiarTablero} />
+
+      {/* Botón para descargar el contenido del tablero como imagen */}
+      <BotonDescarga canvasRef={{ current: canvasRef.current }} />
+    </>
+  );
 };
 
 export default Tablero;

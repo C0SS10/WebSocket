@@ -1,22 +1,22 @@
-// BotonDescarga.js
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import '../styles/BotonDescarga.css'; // Importar el archivo CSS externo
 
 const BotonDescarga = ({ canvasRef, onClick }) => {
+  // Estado para almacenar la URL de la imagen generada
   const [imageURL, setImageURL] = useState('');
 
+  // Función para generar y descargar la imagen del canvas
   const generateImage = () => {
     if (canvasRef.current) {
       const canvas = canvasRef.current;
       const dataURL = canvas.toDataURL('image/png');
       setImageURL(dataURL);
 
-      // Crear un enlace temporal
+      // Crear un enlace temporal para la descarga
       const link = document.createElement('a');
       link.href = dataURL;
       link.download = 'tablero.png';
-
-      // Simular un clic en el enlace para iniciar la descarga
       link.click();
 
       // Llamar a la función proporcionada en la prop onClick, si existe
@@ -26,6 +26,7 @@ const BotonDescarga = ({ canvasRef, onClick }) => {
     }
   };
 
+  // Función para cerrar la vista previa de la imagen
   const closePreview = () => {
     setImageURL('');
 
@@ -36,17 +37,27 @@ const BotonDescarga = ({ canvasRef, onClick }) => {
   };
 
   return (
-    <div style={{ textAlign: 'center', margin: '10px' }}>
-      <button onClick={generateImage}>Descargar Imagen</button>
+    <div className="boton-descarga-container">
+      {/* Botón para generar y descargar la imagen */}
+      <button className="boton-descarga" onClick={generateImage}>
+        Descargar Imagen
+      </button>
+
+      {/* Vista previa de la imagen si está disponible */}
       {imageURL && (
-        <div style={{ marginTop: '10px', textAlign: 'center' }}>
-          <h3 style={{ marginBottom: '5px' }}>Vista previa:</h3>
+        <div className="vista-previa-container">
+          {/* Título de la vista previa */}
+          <h3 className="vista-previa-titulo">Vista previa:</h3>
+
+          {/* Imagen de la vista previa */}
           <img
             src={imageURL}
             alt="Tablero"
-            style={{ maxWidth: '100%', maxHeight: '200px', marginBottom: '5px' }}
+            className="vista-previa-imagen"
           />
-          <button onClick={closePreview} style={{ marginTop: '5px' }}>
+
+          {/* Botón para cerrar la vista previa */}
+          <button className="cerrar-vista-previa" onClick={closePreview}>
             Cerrar Vista Previa
           </button>
         </div>
@@ -55,9 +66,10 @@ const BotonDescarga = ({ canvasRef, onClick }) => {
   );
 };
 
+// Definir propTypes para las props del componente
 BotonDescarga.propTypes = {
   canvasRef: PropTypes.object.isRequired,
-  onClick: PropTypes.func, // Puedes especificar que onClick es opcional
+  onClick: PropTypes.func,
 };
 
 export default BotonDescarga;

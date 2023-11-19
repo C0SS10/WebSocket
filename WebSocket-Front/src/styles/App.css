@@ -1,0 +1,33 @@
+.App {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.paleta-color-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 800px; /* o el ancho deseado */
+  padding: 10px; /* ajusta según sea necesario */
+  text-align: center;
+  background-color: white; /* añade un fondo blanco */
+}
+
+.color{
+  width: 2.3rem;
+  height: 2.3rem;
+  margin: 0.5rem;
+  border-radius: 50%;
+  border: 2px solid black;
+  cursor: pointer;
+}
+
+.tablero {
+  border: 4px solid white;
+}
