@@ -34,7 +34,7 @@ const PaletaColor = ({ onSelectColor }) => {
   );
 };
 
-// Especificar los propTypes para el componente
+// Especificar los propTypes para el componente [by E-CG]
 PaletaColor.propTypes = {
   onSelectColor: PropTypes.func.isRequired // onSelectColor debe ser una función requerida
 };
