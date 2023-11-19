@@ -3,17 +3,17 @@ import PropTypes from "prop-types";
 // Definir una lista de colores predefinidos
 const colores = [
   "#FFFFFF",
-  "#FFD1DC",
-  "#FFA07A",
-  "#87CEEB",
-  "#98FB98",
-  "#FFD700",
-  "#FFB6C1",
-  "#DDA0DD",
-  "#00CED1",
-  "#FF6347",
-  "#B0E0E6",
-  "#F5DEB3"
+  "#C0392B",
+  "#E74C3C",
+  "#9B59B6",
+  "#8E44AD",
+  "#2C3E50",
+  "#3498DB",
+  "#1ABC9C",
+  "#16A085",
+  "#F1C40F",
+  "#F39C12",
+  "#D35400"
 ];
 
 // Componente funcional PaletaColor
