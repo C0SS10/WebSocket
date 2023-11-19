@@ -40,7 +40,7 @@ const BotonDescarga = ({ canvasRef, onClick }) => {
     <div className="boton-descarga-container">
       {/* Botón para generar y descargar la imagen */}
       <button className="boton-descarga" onClick={generateImage}>
-        Descargar Imagen
+        🖼️ Descargar Imagen
       </button>
 
       {/* Vista previa de la imagen si está disponible */}
@@ -58,7 +58,7 @@ const BotonDescarga = ({ canvasRef, onClick }) => {
 
           {/* Botón para cerrar la vista previa */}
           <button className="cerrar-vista-previa" onClick={closePreview}>
-            Cerrar Vista Previa
+            ❌ Cerrar Vista Previa
           </button>
         </div>
       )}

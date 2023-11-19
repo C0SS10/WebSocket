@@ -5,7 +5,7 @@ const BotonLimpia = ({ onCleanBoard }) => {
   return (
     <div>
       {/* Botón para limpiar el tablero, onClick llama a la función proporcionada */}
-      <button onClick={onCleanBoard}>Limpiar Tablero</button>
+      <button onClick={onCleanBoard}>🧽Limpiar Tablero</button>
     </div>
   );
 };
