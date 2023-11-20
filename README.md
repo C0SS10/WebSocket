@@ -11,7 +11,7 @@ Este proyecto implementa un tablero virtual interactivo en tiempo real utilizand
 
 ### Frontend
 - **React-JavaScript**: Framework para construir interfaces de usuario interactivas.
-- **Socket.IO-Client**: Librería para la comunicación en tiempo real con el servidor.
+- **@stomp/stompjs**: Librería para la comunicación en tiempo real con el servidor.
 
 ### Backend
 - **Java Spring Boot**: Framework para el desarrollo de aplicaciones Java.
