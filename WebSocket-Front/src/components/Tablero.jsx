@@ -14,16 +14,16 @@ const Tablero = () => {
   const initSocket = () => {
     const newSocket = new Client({
       brokerURL: 'ws://localhost:8080/ws'
-    });
-
+    });    
+  
     newSocket.onConnect = () => {
       console.log('Conexión WebSocket abierta');
-      newSocket.subscribe('/tablero/coordenadas', (m) => {
+      newSocket.subscribe('/tablero/coordenada', (m) => {
         const coordenada = JSON.parse(m.body);
         console.log("Coordenadas recibidas desde el servidor: ", coordenada);
       });
     };
-
+  
     newSocket.activate();
     return newSocket;
   };
@@ -45,11 +45,11 @@ const Tablero = () => {
 
   function enDibujo(ctx, punto, antPunto) {
     dibujarLinea(antPunto, punto, ctx, color, 6);
-
+  
     if (socket && socket.connected) {
       socket.publish({
-        destination: '/tablero/coordenadas',
-        body: JSON.stringify({ x: punto.x, y: punto.y })
+        destination: '/app/tablero',
+        body: JSON.stringify({ x: punto.x, y: punto.y }),
       });
     }
   }
