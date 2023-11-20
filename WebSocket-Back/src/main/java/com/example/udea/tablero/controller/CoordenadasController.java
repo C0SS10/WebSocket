@@ -11,8 +11,8 @@ import com.example.udea.tablero.model.Coordenadas;
 @CrossOrigin(origins = "*")
 public class CoordenadasController {
 
-    @MessageMapping("/tablero-app/enviarCoordenadas")
-    @SendTo("/tablero-topic/actualizarCoordenadas")
+    @MessageMapping("/tablero")
+    @SendTo("/tablero/coordenadas")
     public Coordenadas enviarCoordenadas(Coordenadas coordenadas) {
         return coordenadas;
     }
