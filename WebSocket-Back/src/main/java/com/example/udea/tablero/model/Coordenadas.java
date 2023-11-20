@@ -1,5 +1,5 @@
 package com.example.udea.tablero.model;
 
-public record Coordenadas(int x, int y) {
+public record Coordenadas(double x, double y) {
   
 }
