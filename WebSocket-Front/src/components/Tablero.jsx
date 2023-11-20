@@ -8,22 +8,28 @@ import { Client } from "@stomp/stompjs";
 const Tablero = () => {
   const [socket, setSocket] = useState(null);
   const [color, setColor] = useState("#FFFFFF");
+  const [receivedCoordinates, setReceivedCoordinates] = useState([]);
   const { setCanvasRef, onCanvasMouseDown } = useOnDraw(enDibujo);
   const canvasRef = useRef(null);
 
   const initSocket = () => {
     const newSocket = new Client({
-      brokerURL: 'ws://localhost:8080/ws'
-    });    
-  
+      brokerURL: "ws://localhost:8080/ws",
+    });
+
     newSocket.onConnect = () => {
-      console.log('Conexión WebSocket abierta');
-      newSocket.subscribe('/tablero/coordenada', (m) => {
+      console.log("Conexión WebSocket abierta");
+      newSocket.subscribe("/tablero/coordenada", (m) => {
         const coordenada = JSON.parse(m.body);
         console.log("Coordenadas recibidas desde el servidor: ", coordenada);
+        // Actualizar el estado con las nuevas coordenadas
+        setReceivedCoordinates((prevCoordinates) => [
+          ...prevCoordinates,
+          coordenada,
+        ]);
       });
     };
-  
+
     newSocket.activate();
     return newSocket;
   };
@@ -45,17 +51,44 @@ const Tablero = () => {
 
   function enDibujo(ctx, punto, antPunto) {
     dibujarLinea(antPunto, punto, ctx, color, 6);
-  
+
     if (socket && socket.connected) {
+      console.log("Enviando coordenadas al servidor...");
       socket.publish({
-        destination: '/app/tablero',
-        body: JSON.stringify({ x: punto.x, y: punto.y }),
+        destination: "/app/tablero",
+        body: JSON.stringify({ x: punto.x, y: punto.y, color }),
       });
+    } else {
+      console.error("La conexión WebSocket no está activa");
     }
+
+    // Agregar solo la última coordenada al estado
+    setReceivedCoordinates([{ x: punto.x, y: punto.y, color }]);
   }
 
+  useEffect(() => {
+    if (socket && socket.connected) {
+      const ctx = canvasRef.current.getContext("2d");
+      const lastCoord = receivedCoordinates[receivedCoordinates.length - 1];
+      if (lastCoord) {
+        const start =
+          receivedCoordinates.length > 1
+            ? receivedCoordinates[receivedCoordinates.length - 2]
+            : null;
+        if (start) {
+          dibujarLinea(start, lastCoord, ctx, lastCoord.color, 6);
+        } else {
+          // Dibuja un punto si no hay coordenadas anteriores
+          dibujarLinea(lastCoord, lastCoord, ctx, lastCoord.color, 6);
+        }
+      }
+    }
+  }, [receivedCoordinates, socket]);
+
   function dibujarLinea(inicio, fin, ctx, color, width) {
-    inicio = inicio ?? fin;
+    if (!inicio) {
+      return;
+    }
     ctx.beginPath();
     ctx.lineWidth = width;
     ctx.strokeStyle = color;
@@ -66,6 +99,7 @@ const Tablero = () => {
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.arc(inicio.x, inicio.y, width / 2, 0, 2 * Math.PI);
+    ctx.fill();
     ctx.closePath();
   }
 
@@ -77,6 +111,7 @@ const Tablero = () => {
     if (canvasRef.current) {
       const ctx = canvasRef.current.getContext("2d");
       ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      setReceivedCoordinates([]);
       console.log("Limpiando el tablero...");
     }
   };
