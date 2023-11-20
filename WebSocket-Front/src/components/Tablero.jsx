@@ -70,11 +70,11 @@ const Tablero = () => {
     if (socket && socket.connected) {
       const ctx = canvasRef.current.getContext("2d");
       const lastCoord = receivedCoordinates[receivedCoordinates.length - 1];
+      const start =
+        receivedCoordinates.length > 1
+          ? receivedCoordinates[receivedCoordinates.length - 2]
+          : null;
       if (lastCoord) {
-        const start =
-          receivedCoordinates.length > 1
-            ? receivedCoordinates[receivedCoordinates.length - 2]
-            : null;
         if (start) {
           dibujarLinea(start, lastCoord, ctx, lastCoord.color, 6);
         } else {
