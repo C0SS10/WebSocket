@@ -1,10 +1,13 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useOnDraw } from "./Logica";
 import PaletaColor from "./PaletaColor";
 import BotonLimpiar from "./BotonLimpiar";
 import BotonDescarga from "./BotonDescarga";
+import io from "socket.io-client";
 
 const Tablero = () => {
+  // Referencia al socket
+  const [socket, setSocket] = useState(null);
   // Estado para almacenar el color seleccionado
   const [color, setColor] = useState("#FFFFFF");
 
@@ -14,10 +17,34 @@ const Tablero = () => {
   // Referencia al canvas
   const canvasRef = useRef(null);
 
+  useEffect(() => {
+    // Establecer la conexión WebSocket con el servidor
+    const newSocket = io("http://localhost:8080/tablero-ws");
+
+    //Escuchar eventos desde el servidor
+    newSocket.on("actualizarCoordenadas", (coordenadas) => {
+      //Lógica para procesar las coordenadas recibidas desde el servidor
+      console.log("Coordenadas recibidas desde el servidor: ", coordenadas);
+    });
+
+    // Guardar la referencia al socket
+    setSocket(newSocket);
+
+    // Limpiar la conexión al desmontar el componente
+    return() => {
+      newSocket.disconnect();
+    }
+  },[]);
+
   // Función que se ejecuta cuando se dibuja en el canvas
   function enDibujo(ctx, punto, antPunto) {
     // Llamar a la función para dibujar una línea
     dibujarLinea(antPunto, punto, ctx, color, 6);
+
+    // Enviar las coordenadas al servidor
+    if (socket){
+      socket.emit("enviarCoordenadas", {x: punto.x, y: punto.y});
+    }
   }
 
   // Función para dibujar una línea en el canvas
